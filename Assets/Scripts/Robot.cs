@@ -30,6 +30,8 @@ public class Robot : MonoBehaviour
 
     public void RunProgram() {
         direction = RandomDirection();
+
         transform.position += direction;
+        transform.position = GameController.instance.CheckBounds(GameController.instance.SnapToGrid(transform.position));
     }
 }

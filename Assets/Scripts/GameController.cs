@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
 
     public GameObject robotPrefab, floorPrefab, wallPrefab, resourcePrefab, enemyPrefab;
 
-    public Vector2 gridSize = new Vector2(14,10);
+    public Vector2 gridSize = new Vector2(0,0);
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +31,8 @@ public class GameController : MonoBehaviour
     void InitGrid(){
         gridPositions.Clear();
      
-        for (int i = 0; i < gridSize.x; i++){
-            for(int j = 0; j < gridSize.y; j++){
+        for (int i = 0; i <= gridSize.x; i++){
+            for(int j = 0; j <= gridSize.y; j++){
                 Vector3 pos = new Vector3(i-gridSize.x/2, j-gridSize.y/2, 0);
                 gridPositions.Add(pos);
                 Floor floorTile = Instantiate(floorPrefab, transform).GetComponent<Floor>();
@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
         {
             newPos.x = gridSize.x / 2;
         }
-        if (pos.y > gridSize.x / 2)
+        if (pos.y > gridSize.y / 2)
         {
             newPos.y = -gridSize.y / 2;
         }
