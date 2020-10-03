@@ -17,23 +17,27 @@ public class GameController : MonoBehaviour
 
     public GameObject robotPrefab, floorPrefab, wallPrefab, resourcePrefab, enemyPrefab;
 
-    public Vector2 gridSize = new Vector2(0,0);
+    public Vector2 gridSize = new Vector2(0, 0);
 
     // Start is called before the first frame update
     void Start()
     {
-        if (instance == null) {
+        if (instance == null)
+        {
             instance = this;
         }
         InitGrid();
     }
 
-    void InitGrid(){
+    void InitGrid()
+    {
         gridPositions.Clear();
-     
-        for (int i = 0; i <= gridSize.x; i++){
-            for(int j = 0; j <= gridSize.y; j++){
-                Vector3 pos = new Vector3(i-gridSize.x/2, j-gridSize.y/2, 0);
+
+        for (int i = 0; i <= gridSize.x; i++)
+        {
+            for (int j = 0; j <= gridSize.y; j++)
+            {
+                Vector3 pos = new Vector3(i - gridSize.x / 2, j - gridSize.y / 2, 0);
                 gridPositions.Add(pos);
                 Floor floorTile = Instantiate(floorPrefab, transform).GetComponent<Floor>();
                 float c = (Random.value + 9) / 10;
@@ -43,11 +47,11 @@ public class GameController : MonoBehaviour
             }
         }
 
-        
-     
 
 
-       
+
+
+
     }
 
     public Robot SpawnRobot()
@@ -57,27 +61,43 @@ public class GameController : MonoBehaviour
         return robot;
     }
 
-    public Vector3 CheckBounds(Vector2 pos) {
+    public void CheckBounds(Robot robot)
+    {
+        Vector2 pos = robot.transform.position;
         Vector2 newPos = pos;
-        if (pos.x > gridSize.x / 2) {
-            newPos.x = -gridSize.x / 2;
-        }
-        if (pos.x < -gridSize.x / 2)
+        Vector2 target = robot.target;
+        Vector2 newTarget = target;
+        bool outOfBounds = false;
+
+        if (target.x > gridSize.x / 2 && pos.x > gridSize.x / 2)
         {
-            newPos.x = gridSize.x / 2;
+            newPos.x = -gridSize.x / 2 - 1;
+            newTarget.x = -gridSize.x / 2;
+            outOfBounds = true;
         }
-        if (pos.y > gridSize.y / 2)
+        if (target.x < -gridSize.x / 2 && pos.x < -gridSize.x / 2)
         {
-            newPos.y = -gridSize.y / 2;
+            newPos.x = gridSize.x / 2 + 1;
+            newTarget.x = gridSize.x / 2;
+            outOfBounds = true;
         }
-        if (pos.y < -gridSize.y / 2)
+        if (target.y > gridSize.y / 2 && pos.y > gridSize.y / 2)
         {
-            newPos.y = gridSize.y / 2;
+            newPos.y = -gridSize.y / 2 - 1;
+            newTarget.y = -gridSize.y / 2;
+            outOfBounds = true;
         }
-        return newPos;
-    }
-    public Vector3 SnapToGrid(Vector3 pos) {
-        return new Vector3((int)pos.x, (int)pos.y, 0);
+        if (target.y < -gridSize.y / 2 && pos.y < -gridSize.y / 2)
+        {
+            newPos.y = gridSize.y / 2 + 1;
+            newTarget.y = gridSize.y / 2;
+            outOfBounds = true;
+        }
+        if (outOfBounds)
+        {
+            robot.target = newTarget;
+            robot.transform.position = newPos;
+        }
     }
 
 
